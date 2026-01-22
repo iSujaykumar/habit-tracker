@@ -447,7 +447,7 @@ textarea:focus {
 
 /* ================= VIEWS ================= */
 /* iPad-safe view switching */
-/* .view {
+.view {
   display: none;
   flex-direction: column;
   height: 100%;
@@ -455,7 +455,7 @@ textarea:focus {
 
 .view.active {
   display: flex;
-} */
+}
 
 /* ================= ANALYTICS ================= */
 .analytics-card {
@@ -506,7 +506,6 @@ textarea:focus {
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--glass-border);
   transition: var(--transition);
-  min-height: 56px;
 }
 
 #weeklyBars > div:hover {
@@ -586,7 +585,11 @@ textarea:focus {
 }
 
 /* ================= FULL SCREEN FIT & SCALING ================= */
-
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
 
 body {
   display: flex;
@@ -598,21 +601,14 @@ body {
 }
 
 .app-container {
-  width: 100%;
-  height: 100dvh; /* FIX */
+  width: 100vw;
+  height: 100vh;
   max-width: none;
+  padding: 8px;
   perspective: 1200px;
   display: flex;
   flex-direction: column;
-
-  /* SAFE AREA SUPPORT */
-  padding:
-    env(safe-area-inset-top)
-    env(safe-area-inset-right)
-    env(safe-area-inset-bottom)
-    env(safe-area-inset-left);
 }
-
 
 /* Main card takes full available space */
 .app,
@@ -657,9 +653,9 @@ header {
 
 .header-row,
 .habit-row {
-  grid-template-columns: 4fr repeat(7, minmax(56px, 1fr));
+  min-width: 560px;
+  flex-shrink: 0;
 }
-
 
 .header-row > div,
 .habit-row > div {
@@ -691,7 +687,7 @@ header {
 }
 
 /* Ensure views fill height */
-/* .view {
+.view {
   height: 100%;
   inset: 0;
   padding: 8px;
@@ -699,18 +695,10 @@ header {
 
 .view.active {
   position: static;
-} */
-
-
-.view {
-  position: relative;
-  inset: auto;
-  height: 100%;
 }
 
-
 /* ================= STREAK AND NOTES POSITIONING ================= */
-/* .streak {
+.streak {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -722,9 +710,9 @@ header {
   font-weight: 700;
   box-shadow: var(--shadow-sm);
   z-index: 10;
-} */
+}
 
-/* #notes {
+#notes {
   position: absolute;
   top: 8px;
   left: 8px;
@@ -740,26 +728,7 @@ header {
   resize: none;
   box-shadow: var(--shadow-sm);
   z-index: 10;
-} */
-
-.top-widgets {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
 }
-
-#notes {
-  flex: 1;
-  height: 72px;
-}
-
-.streak {
-  min-width: 140px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 
 #notes:focus {
   outline: none;
@@ -810,13 +779,4 @@ header {
 #weeklyAnalytics {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-}
-@media (min-width: 768px) {
-  .app {
-    padding: 24px;
-  }
-
-  .nav-row {
-    margin-top: 16px;
-  }
 }
