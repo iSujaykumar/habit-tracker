@@ -4,32 +4,21 @@
     <meta charset="UTF-8" />
     <title>Monthly Habit Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#32246E">
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="./assets/favicon.ico">
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
 
   <body>
     <div class="app-container">
+
       <!-- ================= TRACKER VIEW ================= -->
-      <section
-        class="view active"
-        id="trackerView"
-        aria-labelledby="tracker-heading"
-      >
+      <section class="view active" id="trackerView" aria-labelledby="tracker-heading">
         <div class="app">
           <header>
             <h1 id="tracker-heading">Monthly Habit Tracker</h1>
-            <div id="totalBadges" class="total-badges">🏅 Total Badges: 0 / 30</div>
 
             <!-- Flip Date -->
-            <div
-              class="flip-bar"
-              role="navigation"
-              aria-label="Date navigation"
-            >
+            <div class="flip-bar" role="navigation" aria-label="Date navigation">
               <div class="flip-box" aria-label="Change month">
                 <div class="flip-card" id="monthFlip">January</div>
               </div>
@@ -57,28 +46,15 @@
 
           <!-- Daily Progress -->
           <section class="progress-wrap" aria-labelledby="daily-progress-label">
-            <div class="progress-label" id="daily-progress-label">
-              Daily Progress
-            </div>
-            <div
-              class="progress-bar"
-              role="progressbar"
-              aria-valuenow="0"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
+            <div class="progress-label" id="daily-progress-label">Daily Progress</div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
               <div class="progress-fill" id="progressFill"></div>
             </div>
           </section>
 
-          <div class="reset-buttons">
-            <button id="resetBtn" class="reset-btn" aria-label="Reset day">
-              Reset Day
-            </button>
-            <button id="resetAllBtn" class="reset-btn" aria-label="Reset all">
-              Reset All
-            </button>
-          </div>
+          <button id="resetBtn" class="reset-btn" aria-label="Reset day">
+            Reset Day
+          </button>
 
           <button id="addHabitBtn" class="add-btn" aria-label="Add habit">
             ＋ Add Habit
@@ -86,34 +62,14 @@
 
           <!-- Mood -->
           <section class="mood" role="radiogroup" aria-label="Mood selector">
-            <span
-              role="radio"
-              tabindex="0"
-              data-mood="1"
-              aria-label="Slightly happy"
-              >🙂</span
-            >
-            <span
-              role="radio"
-              tabindex="0"
-              data-mood="2"
-              aria-label="Very happy"
-              >😍</span
-            >
-            <span role="radio" tabindex="0" data-mood="3" aria-label="Neutral"
-              >😐</span
-            >
-            <span role="radio" tabindex="0" data-mood="4" aria-label="Sad"
-              >😞</span
-            >
+            <span role="radio" tabindex="0" data-mood="1" aria-label="Slightly happy">🙂</span>
+            <span role="radio" tabindex="0" data-mood="2" aria-label="Very happy">😍</span>
+            <span role="radio" tabindex="0" data-mood="3" aria-label="Neutral">😐</span>
+            <span role="radio" tabindex="0" data-mood="4" aria-label="Sad">😞</span>
           </section>
 
           <!-- Notes -->
-          <textarea
-            id="notes"
-            placeholder="Notes..."
-            aria-label="Daily notes"
-          ></textarea>
+          <textarea id="notes" placeholder="Notes..." aria-label="Daily notes"></textarea>
 
           <!-- Streak -->
           <section class="streak" aria-labelledby="streak-label">
@@ -124,12 +80,8 @@
         <!-- Navigation -->
         <nav class="nav-row" aria-label="View navigation">
           <button id="prevDay" aria-label="Previous day">◀</button>
-          <button id="openWeekly" aria-label="Open weekly analytics">
-            📊 Weekly
-          </button>
-          <button id="openMonthly" aria-label="Open monthly analytics">
-            📅 Monthly
-          </button>
+          <button id="openWeekly" aria-label="Open weekly analytics">📊 Weekly</button>
+          <button id="openMonthly" aria-label="Open monthly analytics">📅 Monthly</button>
           <button id="nextDay" aria-label="Next day">▶</button>
         </nav>
       </section>
@@ -137,74 +89,54 @@
       <!-- ================= WEEKLY ANALYTICS VIEW ================= -->
       <section class="view" id="weeklyView" aria-labelledby="weekly-heading">
         <h2 id="weekly-heading">Weekly Progress</h2>
-        <div id="weeklyCompletion" class="weekly-completion">
-          <div class="weekly-percent">0%</div>
-          <div class="weekly-subtext">0 / 7 days completed</div>
-        </div>
-        <div id="badgeWarning" class="badge-warning" style="display: none;">⚠️ You’re at risk of losing this month’s badge. Stay consistent.</div>
-        <p class="week-context">Week of <strong id="weekRange"></strong></p>
+        <p class="week-context">
+          Week of <strong id="weekRange"></strong>
+        </p>
 
         <div id="weeklyBars" role="list"></div>
 
-        <button id="backToTracker" aria-label="Back to tracker">⬅ Back</button>
+        <button id="backToTracker" aria-label="Back to tracker">
+          ⬅ Back
+        </button>
       </section>
 
       <!-- ================= MONTHLY ANALYTICS VIEW ================= -->
-      <section
-        class="view"
-        id="monthlyAnalytics"
-        aria-labelledby="analyticsMonth"
-      >
+      <section class="view" id="monthlyAnalytics" aria-labelledby="monthly-heading">
         <header class="analytics-header">
-          <h2 id="analyticsMonth">January 2026</h2>
+          <h2 id="monthly-heading">January 2026</h2>
         </header>
 
         <article class="analytics-card">
           <p>Monthly Completion</p>
-          <div
-            class="progress-bar"
-            role="progressbar"
-            aria-valuenow="0"
-            aria-valuemin="0"
-            aria-valuemax="100"
-          >
-            <div class="progress-fill" id="monthCompletion"></div>
+          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill" id="monthCompletion" data-value="0"></div>
           </div>
           <span id="monthCompletionText" aria-live="polite">0%</span>
-          <div id="monthlyBadgeStatus" class="monthly-badge-status">Monthly Badge: Pending</div>
         </article>
 
-        <!-- Side-by-side: Habit-wise + Weekly Breakdown -->
-        <div class="side-by-side">
-          <article class="analytics-card">
-            <p>Habit-wise Progress</p>
-            <div id="habitAnalytics" role="list"></div>
-          </article>
-
-          <article class="analytics-card">
-            <p>Weekly Breakdown</p>
-            <div id="weeklyAnalytics" role="list"></div>
-          </article>
-        </div>
-
-        <!-- Mood Chart (full width) -->
         <article class="analytics-card">
-          <p>Mood Trend</p>
-          <div id="moodSummary"></div>
+          <p>Habit-wise Progress</p>
+          <div id="habitAnalytics" role="list"></div>
         </article>
+          
+        <!-- <article class="analytics-card">
+          <p>Weekly Breakdown</p>
+          <div id="weeklyAnalytics" role="list"></div>
+        </article> -->
 
-        <!-- Buttons at bottom -->
-        <div class="buttons-row">
-          <button id="jumpToday" class="fab" aria-label="Jump to today">
-            📍
-          </button>
-          <button id="backToTrackerFromMonthly" aria-label="Back to tracker">
-            ⬅ Back
-          </button>
-        </div>
+        <!-- Jump to Today -->
+        <button id="jumpToday" class="fab" aria-label="Jump to today">
+          📍
+        </button>
+
+        <button id="backToTrackerFromMonthly" aria-label="Back to tracker">
+          ⬅ Back
+        </button>
       </section>
+
     </div>
 
     <script src="app.js" defer></script>
   </body>
 </html>
+
