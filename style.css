@@ -45,7 +45,11 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
   color: var(--text-primary);
   overscroll-behavior: none;
   transition: var(--transition);
@@ -53,10 +57,12 @@ body {
 
 /* ================= APP CONTAINER ================= */
 .app-container {
-  position: relative;
-  width: min(100%, 460px);
-  padding: 16px;
-  perspective: 1200px;
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ================= CARD BASE ================= */
@@ -117,10 +123,10 @@ h2 {
 }
 
 .flip-box::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
   opacity: 0;
   transition: var(--transition);
 }
@@ -208,8 +214,12 @@ h2 {
 }
 
 @keyframes heartbeat {
-  0% { transform: scale(1.1); }
-  100% { transform: scale(1.25); }
+  0% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.25);
+  }
 }
 
 /* ================= PROGRESS ================= */
@@ -246,16 +256,25 @@ h2 {
 }
 
 .progress-fill::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   animation: shimmer 2s infinite linear;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* ================= BUTTONS ================= */
@@ -271,10 +290,10 @@ button {
 }
 
 button::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
   opacity: 0;
   transition: var(--transition);
 }
@@ -343,9 +362,15 @@ button:active {
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 20px rgba(132, 94, 247, 0.5); }
-  50% { box-shadow: 0 0 30px rgba(132, 94, 247, 0.8); }
-  100% { box-shadow: 0 0 20px rgba(132, 94, 247, 0.5); }
+  0% {
+    box-shadow: 0 0 20px rgba(132, 94, 247, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(132, 94, 247, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(132, 94, 247, 0.5);
+  }
 }
 
 /* ================= NOTES ================= */
@@ -385,8 +410,12 @@ textarea:focus {
 }
 
 @keyframes glow {
-  0% { box-shadow: 0 10px 30px rgba(255, 159, 28, 0.4); }
-  100% { box-shadow: 0 15px 40px rgba(255, 159, 28, 0.6); }
+  0% {
+    box-shadow: 0 10px 30px rgba(255, 159, 28, 0.4);
+  }
+  100% {
+    box-shadow: 0 15px 40px rgba(255, 159, 28, 0.6);
+  }
 }
 
 /* ================= NAV ================= */
@@ -417,21 +446,15 @@ textarea:focus {
 }
 
 /* ================= VIEWS ================= */
+/* iPad-safe view switching */
 .view {
-  position: absolute;
-  inset: 16px;
-  opacity: 0;
-  pointer-events: none;
-  transform: rotateY(90deg) translateZ(100px) scale(0.9);
-  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  backface-visibility: hidden;
+  display: none;
+  flex-direction: column;
+  height: 100%;
 }
 
 .view.active {
-  position: relative;
-  opacity: 1;
-  pointer-events: auto;
-  transform: rotateY(0deg) translateZ(0) scale(1);
+  display: flex;
 }
 
 /* ================= ANALYTICS ================= */
@@ -536,25 +559,25 @@ textarea:focus {
   .app-container {
     padding: 8px;
   }
-  
+
   .flip-bar {
     gap: 8px;
   }
-  
+
   .flip-box {
     padding: 10px 16px;
     font-size: 18px;
   }
-  
+
   .mood {
     gap: 16px;
     font-size: 32px;
   }
-  
+
   .nav-row {
     flex-wrap: wrap;
   }
-  
+
   .nav-row button {
     padding: 12px;
     font-size: 14px;
@@ -562,11 +585,10 @@ textarea:focus {
 }
 
 /* ================= FULL SCREEN FIT & SCALING ================= */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
 }
 
 body {
@@ -574,6 +596,8 @@ body {
   justify-content: center;
   align-items: center;
   background: var(--bg-main);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .app-container {
@@ -595,6 +619,7 @@ body {
   flex-direction: column;
   padding: 16px;
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Header fixed height */
@@ -622,6 +647,7 @@ header {
 /* Horizontal scroll for grid */
 .tracker {
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -753,4 +779,13 @@ header {
 #weeklyAnalytics {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+@media (min-width: 768px) {
+  .app {
+    padding: 24px;
+  }
+
+  .nav-row {
+    margin-top: 16px;
+  }
 }

@@ -1,3 +1,4 @@
+console.log("APP JS LOADED");
 
 /* =======================
    STATE
@@ -490,4 +491,3 @@ loadDay();
 
 
 
- 
