@@ -1,147 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Monthly Habit Tracker</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <title>Monthly Habit Tracker</title>
 
-  <body>
-    <div class="app-container">
+  <!-- Mobile & PWA-safe viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-      <!-- ================= TRACKER VIEW ================= -->
-      <div class="view active" id="trackerView">
-        <div class="app">
-          <h1>Monthly Habit Tracker</h1>
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
 
-          <!-- Flip Date -->
-          <div class="flip-bar">
-            <div class="flip-box">
-              <div class="flip-card" id="monthFlip">January</div>
-            </div>
-            <div class="flip-box">
-              <div class="flip-card" id="dateFlip">2</div>
-            </div>
-          </div>
+</head>
+<body>
 
-          <!-- Tracker Grid -->
-          <div class="tracker">
-            <div class="header-row">
-              <div class="activity-col">Activity</div>
-              <div>S</div>
-              <div>M</div>
-              <div>T</div>
-              <div>W</div>
-              <div>T</div>
-              <div>F</div>
-              <div>S</div>
-            </div>
+<div class="app-container">
 
-            <div id="habitRows"></div>
-          </div>
+  <!-- ================= TRACKER VIEW ================= -->
+  <div class="view active" id="trackerView">
 
-          <!-- Daily Progress -->
-          <div class="progress-wrap">
-            <div class="progress-label">Daily Progress</div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
-            </div>
-          </div>
+    <div class="app">
 
-          <button id="resetBtn" class="reset-btn" aria-label="Reset day">
-            Reset Day
-          </button>
+      <h1>Habit Tracker</h1>
 
-          <button id="addHabitBtn" class="add-btn" aria-label="Add habit">
-            ＋ Add Habit
-          </button>
-
-          <!-- Mood -->
-          <div class="mood" aria-label="Mood selector">
-            <span data-mood="1">🙂</span>
-            <span data-mood="2">😍</span>
-            <span data-mood="3">😐</span>
-            <span data-mood="4">😞</span>
-          </div>
-
-          <!-- Notes -->
-          <textarea id="notes" placeholder="Notes..."></textarea>
-
-          <!-- Streak -->
-          <div class="streak">
-            🔥 Day Streak: <span id="streakCount">0</span>
-          </div>
+      <!-- Date Flip -->
+      <div class="flip-bar">
+        <div class="flip-box">
+          <div class="flip-card" id="monthFlip">Month</div>
         </div>
-
-        <!-- Navigation -->
-        <div class="nav-row">
-          <button id="prevDay" aria-label="Previous day">◀</button>
-          <button id="openWeekly" aria-label="Open weekly analytics">📊 Weekly</button>
-          <button id="openMonthly" aria-label="Open monthly analytics">📅 Monthly</button>
-          <button id="nextDay" aria-label="Next day">▶</button>
+        <div class="flip-box">
+          <div class="flip-card" id="dateFlip">Date</div>
         </div>
       </div>
 
-      <!-- ================= WEEKLY ANALYTICS VIEW ================= -->
-      <div class="view" id="weeklyView">
-        <h2>Weekly Progress</h2>
-        <p class="week-context">
-          Week of <strong id="weekRange"></strong>
-        </p>
+      <!-- Habit Grid -->
+      <div class="tracker">
 
-        <div id="weeklyBars"></div>
+        <!-- Header Row (MONDAY START) -->
+        <div class="header-row">
+          <div class="activity-col">ACTIVITY</div>
+          <div>M</div>
+          <div>T</div>
+          <div>W</div>
+          <div>T</div>
+          <div>F</div>
+          <div>S</div>
+          <div>S</div>
+        </div>
 
-        <button id="backToTracker" aria-label="Back to tracker">
-          ⬅ Back
-        </button>
+        <!-- Dates -->
+        <div class="date-row" id="dateRow"></div>
+
+        <!-- Habit Rows -->
+        <div id="habitRows"></div>
+
       </div>
 
-      <!-- ================= MONTHLY ANALYTICS VIEW ================= -->
-      <div class="view" id="monthlyAnalytics">
-        <header class="analytics-header">
-          <h2 id="analyticsMonth">January 2026</h2>
-        </header>
-
-        <div class="analytics-card">
-          <p>Monthly Completion</p>
-          <div class="progress-bar">
-            <div
-              class="progress-fill"
-              id="monthCompletion"
-              data-value="0"
-            ></div>
-          </div>
-          <span id="monthCompletionText">0%</span>
+      <!-- Progress -->
+      <div class="progress-wrap compact">
+        <div class="progress-label">Today</div>
+        <div class="progress-bar tiny">
+          <div class="progress-fill" id="progressFill"></div>
         </div>
+      </div>
 
-        <div class="analytics-card">
-          <p>Habit-wise Progress</p>
-          <div id="habitAnalytics"></div>
-        </div>
+      <!-- Controls -->
+      <div class="bottom-controls">
+        <button id="resetBtn">Reset Day</button>
+        <button id="addHabitBtn">+ Habit</button>
+      </div>
 
-        <div class="analytics-card">
-          <p>Weekly Breakdown</p>
-          <div id="weeklyAnalytics"></div>
-        </div>
+      <!-- Mood -->
+      <div class="mood compact">
+        <span data-mood="1">🙂</span>
+        <span data-mood="2">😍</span>
+        <span data-mood="3">😐</span>
+        <span data-mood="4">😞</span>
+      </div>
 
-        <!-- Jump to Today -->
-        <button id="jumpToday" class="fab" aria-label="Jump to today">
-          📍
-        </button>
-
-        <button
-          id="backToTrackerFromMonthly"
-          aria-label="Back to tracker"
-        >
-          ⬅ Back
-        </button>
+      <!-- Streak -->
+      <div class="streak compact">
+        Streak: <span id="streakCount">0</span> 🔥
       </div>
 
     </div>
 
-    <script src="app.js" defer></script>
-  </body>
-</html>
+    <!-- Navigation -->
+    <div class="nav-row compact">
+      <button id="prevDay">◀</button>
+      <button id="openWeekly">Weekly</button>
+      <button id="openMonthly">Monthly</button>
+      <button id="nextDay">▶</button>
+    </div>
 
+  </div>
+
+  <!-- ================= WEEKLY VIEW ================= -->
+  <div class="view" id="weeklyView">
+
+    <h2>Weekly</h2>
+    <p id="weekRange"></p>
+
+    <div id="weeklyMoodWave" class="mood-wave"></div>
+    <div id="weeklyBars"></div>
+
+    <button id="backToTracker">← Back</button>
+
+  </div>
+
+  <!-- ================= MONTHLY VIEW ================= -->
+  <div class="view" id="monthlyAnalytics">
+
+    <h2 id="analyticsMonth"></h2>
+
+    <div class="analytics-card">
+      <p>Month %</p>
+      <div class="progress-bar">
+        <div id="monthCompletion" class="progress-fill"></div>
+      </div>
+      <span id="monthCompletionText">0%</span>
+    </div>
+
+    <div id="habitAnalytics" class="analytics-card"></div>
+    <div id="weeklyAnalytics" class="analytics-card"></div>
+
+    <!-- <button id="jumpToday">Today</button> -->
+    <button id="backToTrackerFromMonthly">← Back</button>
+
+  </div>
+
+</div>
+
+<!-- Script -->
+<script src="app.js" defer></script>
+
+</body>
+</html>
+2
