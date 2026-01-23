@@ -16,7 +16,7 @@ let habits = JSON.parse(localStorage.getItem("habits")) || [
 ];
 
 let store = JSON.parse(localStorage.getItem("tracker")) || {};
-let currentDate = new Date("2026-01-03");  // Fixed starting date
+let currentDate = new Date("2026-01-03");
 
 /* =======================
    DOM
@@ -106,8 +106,6 @@ function buildHabits() {
   const key = getDateKey();
   ensureDay(key);
 
-  const dayIndex = currentDate.getDay();
-
   habits.forEach((name, h) => {
     const row = document.createElement("div");
     row.className = "habit-row";
@@ -128,7 +126,6 @@ function buildHabits() {
         habits.splice(h, 1);
         saveHabits();
         buildHabits();
-        if (monthlyView.classList.contains("active")) renderMonthly();
       }
     };
 
@@ -138,20 +135,16 @@ function buildHabits() {
       const heart = document.createElement("div");
       heart.className = "heart";
       heart.textContent = "💛";
-      heart.tabIndex = 0;
 
       const hk = `${h}-${d}`;
       if (store[key].habits[hk] === true) heart.classList.add("done");
 
-      heart.onclick = heart.onkeydown = (e) => {
-        if (e.type === "keydown" && !["Enter", " "].includes(e.key)) return;
-        e.preventDefault();
+      heart.onclick = () => {
         const newState = !heart.classList.contains("done");
-        heart.classList.toggle("done", newState);
+        heart.classList.toggle("done");
         store[key].habits[hk] = newState;
         saveStore();
         updateProgress();
-        if (monthlyView.classList.contains("active")) renderMonthly();
       };
 
       row.appendChild(heart);
@@ -169,20 +162,22 @@ function buildHabits() {
 
 function renameHabit(index) {
   const name = prompt("Rename habit:", habits[index]);
-  if (name === null || name.trim() === "") return;
-  habits[index] = name.trim();
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (trimmed === "") return;
+  habits[index] = trimmed;
   saveHabits();
   buildHabits();
-  if (monthlyView.classList.contains("active")) renderMonthly();
 }
 
 addHabitBtn.onclick = () => {
   const name = prompt("New habit name:");
-  if (name === null || name.trim() === "") return;
-  habits.push(name.trim());
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (trimmed === "") return;
+  habits.push(trimmed);
   saveHabits();
   buildHabits();
-  if (monthlyView.classList.contains("active")) renderMonthly();
 };
 
 /* =======================
@@ -202,15 +197,12 @@ function updateProgress() {
 
   const percent = habits.length ? Math.round((done / habits.length) * 100) : 0;
 
-  if (progressFill) {
-    progressFill.style.width = percent + "%";
-    progressFill.parentElement.setAttribute("aria-valuenow", percent);
-  }
+  progressFill.style.width = percent + "%";
   calcStreak();
 }
 
 /* =======================
-   STREAK
+   STREAK (CALCULATE FROM VIEWED DATE)
 ======================= */
 
 function isDayComplete(date) {
@@ -223,7 +215,7 @@ function isDayComplete(date) {
 
 function calcStreak() {
   let streak = 0;
-  let checkDate = new Date(currentDate);
+  let checkDate = new Date(currentDate);  // Use viewed date as "today"
   checkDate.setHours(0, 0, 0, 0);
 
   while (true) {
@@ -235,7 +227,7 @@ function calcStreak() {
     }
   }
 
-  if (streakEl) streakEl.textContent = streak;
+  streakEl.textContent = streak;
 }
 
 /* =======================
@@ -243,21 +235,15 @@ function calcStreak() {
 ======================= */
 
 document.querySelectorAll(".mood span").forEach((el) => {
-  el.onclick = el.onkeydown = (e) => {
-    if (e.type === "keydown" && !["Enter", " "].includes(e.key)) return;
-    e.preventDefault();
+  el.onclick = () => {
     const key = getDateKey();
     ensureDay(key);
 
     store[key].mood = el.dataset.mood;
     saveStore();
 
-    document.querySelectorAll(".mood span").forEach((s) => {
-      s.classList.remove("active");
-      s.setAttribute("aria-checked", "false");
-    });
+    document.querySelectorAll(".mood span").forEach((s) => s.classList.remove("active"));
     el.classList.add("active");
-    el.setAttribute("aria-checked", "true");
   };
 });
 
@@ -266,7 +252,6 @@ document.querySelectorAll(".mood span").forEach((el) => {
 ======================= */
 
 function renderWeekly() {
-  if (!weeklyBars) return;
   weeklyBars.innerHTML = "";
 
   const start = new Date(currentDate);
@@ -290,17 +275,21 @@ function renderWeekly() {
     const row = document.createElement("div");
     row.innerHTML = `
       <span>${labels[i]}</span>
-      <div class="progress-bar" role="progressbar" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-fill" style="width: ${percent}%;"></div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="background: linear-gradient(90deg, var(--warning), #ffbf69);"></div>
       </div>
     `;
 
     weeklyBars.appendChild(row);
+
+    requestAnimationFrame(() => {
+      row.querySelector(".progress-fill").style.width = percent + "%";
+    });
   }
 }
 
 /* =======================
-   MONTHLY ANALYTICS - CORRECTED OVERALL %
+   MONTHLY ANALYTICS
 ======================= */
 
 function renderMonthly() {
@@ -311,34 +300,22 @@ function renderMonthly() {
   const lastDay = new Date(year, month + 1, 0);
   const daysInMonth = lastDay.getDate();
 
-  let totalPossible = 0;
-  let totalCompleted = 0;
+  let completedDays = 0;
+  let totalTracked = 0;
 
-  // Calculate overall monthly completion as average of all habit instances
   for (let day = 1; day <= daysInMonth; day++) {
     const d = new Date(year, month, day);
     const key = getDateKey(d);
     ensureDay(key);
-    const dayIdx = d.getDay();
-
-    habits.forEach((_, h) => {
-      totalPossible++;
-      if (store[key].habits[`${h}-${dayIdx}`] === true) totalCompleted++;
-    });
+    totalTracked++;
+    if (isDayComplete(d)) completedDays++;
   }
 
-  const monthPercent = totalPossible ? Math.round((totalCompleted / totalPossible) * 100) : 0;
+  const monthPercent = totalTracked ? Math.round((completedDays / totalTracked) * 100) : 0;
 
-  const analyticsMonth = document.getElementById("analyticsMonth");
-  const monthCompletionText = document.getElementById("monthCompletionText");
-  const monthCompletion = document.getElementById("monthCompletion");
-
-  if (analyticsMonth) analyticsMonth.textContent = currentDate.toLocaleString("default", { month: "long", year: "numeric" });
-  if (monthCompletionText) monthCompletionText.textContent = monthPercent + "%";
-  if (monthCompletion) {
-    monthCompletion.style.width = monthPercent + "%";
-    monthCompletion.parentElement?.setAttribute("aria-valuenow", monthPercent);
-  }
+  document.getElementById("analyticsMonth").textContent = currentDate.toLocaleString("default", { month: "long", year: "numeric" });
+  document.getElementById("monthCompletionText").textContent = monthPercent + "%";
+  document.getElementById("monthCompletion").style.width = monthPercent + "%";
 
   // Habit-wise Progress
   let habitHTML = "";
@@ -358,22 +335,22 @@ function renderMonthly() {
     habitHTML += `
       <div class="analytics-row">
         <span class="analytics-label">${name}</span>
-        <div class="progress-bar" role="progressbar" aria-valuenow="${habitPct}" aria-valuemin="0" aria-valuemax="100">
-          <div class="progress-fill" style="width: ${habitPct}%;"></div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="background: linear-gradient(90deg, #4ade80, var(--success)); width: ${habitPct}%;"></div>
         </div>
         <span>${habitPct}%</span>
       </div>
     `;
   });
 
-  if (habitAnalytics) habitAnalytics.innerHTML = habitHTML;
+  habitAnalytics.innerHTML = habitHTML;
 
   // Weekly Breakdown
   let weekHTML = "";
   let weekStart = new Date(firstDay);
   let weekNum = 1;
 
-  while (weekStart <= lastDay) {
+  while (weekStart.getMonth() === month || weekStart <= lastDay) {
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekStart.getDate() + 6);
 
@@ -394,8 +371,8 @@ function renderMonthly() {
     weekHTML += `
       <div class="analytics-row">
         <span class="analytics-label">Week ${weekNum}</span>
-        <div class="progress-bar" role="progressbar" aria-valuenow="${weekPct}" aria-valuemin="0" aria-valuemax="100">
-          <div class="progress-fill" style="width: ${weekPct}%;"></div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="background: linear-gradient(90deg, #4ade80, var(--success)); width: ${weekPct}%;"></div>
         </div>
         <span>${weekPct}%</span>
       </div>
@@ -405,22 +382,36 @@ function renderMonthly() {
     weekNum++;
   }
 
-  if (weeklyAnalytics) weeklyAnalytics.innerHTML = weekHTML;
+  weeklyAnalytics.innerHTML = weekHTML;
 }
 
 /* =======================
    NAVIGATION
 ======================= */
 
-document.getElementById("prevDay")?.addEventListener("click", () => {
+document.getElementById("prevDay").onclick = () => {
   currentDate.setDate(currentDate.getDate() - 1);
   loadDay();
-});
+};
 
-document.getElementById("nextDay")?.addEventListener("click", () => {
+document.getElementById("nextDay").onclick = () => {
   currentDate.setDate(currentDate.getDate() + 1);
   loadDay();
-});
+};
+
+if (monthFlip && monthFlip.parentElement) {
+  monthFlip.parentElement.onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    loadDay();
+  };
+}
+
+if (dateFlip && dateFlip.parentElement) {
+  dateFlip.parentElement.onclick = () => {
+    currentDate.setDate(currentDate.getDate() + 1);
+    loadDay();
+  };
+}
 
 jumpTodayBtn.onclick = () => {
   currentDate = new Date("2026-01-03");
@@ -428,13 +419,16 @@ jumpTodayBtn.onclick = () => {
   loadDay();
 };
 
+/* =======================
+   RESET
+======================= */
+
 resetBtn.onclick = () => {
   if (confirm("Reset all data for this day?")) {
     const key = getDateKey();
     store[key] = { habits: {}, mood: null, notes: "" };
     saveStore();
     loadDay();
-    if (monthlyView.classList.contains("active")) renderMonthly();
   }
 };
 
@@ -451,16 +445,14 @@ function loadDay() {
   const key = getDateKey();
   ensureDay(key);
 
-  if (monthFlip) monthFlip.textContent = currentDate.toLocaleString("default", { month: "long" });
-  if (dateFlip) dateFlip.textContent = currentDate.getDate();
+  monthFlip.textContent = currentDate.toLocaleString("default", { month: "long" });
+  dateFlip.textContent = currentDate.getDate();
 
-  if (notesEl) notesEl.value = store[key].notes || "";
+  notesEl.value = store[key].notes || "";
 
-  document.querySelectorAll(".mood span").forEach((s) => {
-    const isActive = s.dataset.mood === String(store[key].mood);
-    s.classList.toggle("active", isActive);
-    s.setAttribute("aria-checked", isActive ? "true" : "false");
-  });
+  document.querySelectorAll(".mood span").forEach((s) =>
+    s.classList.toggle("active", s.dataset.mood === String(store[key].mood))
+  );
 
   buildHabits();
   calcStreak();
@@ -470,20 +462,34 @@ function loadDay() {
    NOTES SAVE
 ======================= */
 
-if (notesEl) {
-  notesEl.oninput = () => {
-    const key = getDateKey();
-    ensureDay(key);
-    store[key].notes = notesEl.value;
-    saveStore();
-  };
-}
+notesEl.oninput = () => {
+  const key = getDateKey();
+  ensureDay(key);
+  store[key].notes = notesEl.value;
+  saveStore();
+};
 
 /* =======================
    INIT
 ======================= */
 
 loadDay();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

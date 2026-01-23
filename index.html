@@ -12,45 +12,43 @@
     <div class="app-container">
 
       <!-- ================= TRACKER VIEW ================= -->
-      <section class="view active" id="trackerView" aria-labelledby="tracker-heading">
+      <div class="view active" id="trackerView">
         <div class="app">
-          <header>
-            <h1 id="tracker-heading">Monthly Habit Tracker</h1>
+          <h1>Monthly Habit Tracker</h1>
 
-            <!-- Flip Date -->
-            <div class="flip-bar" role="navigation" aria-label="Date navigation">
-              <div class="flip-box" aria-label="Change month">
-                <div class="flip-card" id="monthFlip">January</div>
-              </div>
-              <div class="flip-box" aria-label="Change day">
-                <div class="flip-card" id="dateFlip">3</div>
-              </div>
+          <!-- Flip Date -->
+          <div class="flip-bar">
+            <div class="flip-box">
+              <div class="flip-card" id="monthFlip">January</div>
             </div>
-          </header>
+            <div class="flip-box">
+              <div class="flip-card" id="dateFlip">2</div>
+            </div>
+          </div>
 
           <!-- Tracker Grid -->
-          <section class="tracker" aria-labelledby="habits-heading">
-            <div class="header-row" role="row">
-              <div class="activity-col" role="columnheader">Activity</div>
-              <div role="columnheader" aria-label="Sunday">S</div>
-              <div role="columnheader" aria-label="Monday">M</div>
-              <div role="columnheader" aria-label="Tuesday">T</div>
-              <div role="columnheader" aria-label="Wednesday">W</div>
-              <div role="columnheader" aria-label="Thursday">T</div>
-              <div role="columnheader" aria-label="Friday">F</div>
-              <div role="columnheader" aria-label="Saturday">S</div>
+          <div class="tracker">
+            <div class="header-row">
+              <div class="activity-col">Activity</div>
+              <div>S</div>
+              <div>M</div>
+              <div>T</div>
+              <div>W</div>
+              <div>T</div>
+              <div>F</div>
+              <div>S</div>
             </div>
 
-            <div id="habitRows" role="grid"></div>
-          </section>
+            <div id="habitRows"></div>
+          </div>
 
           <!-- Daily Progress -->
-          <section class="progress-wrap" aria-labelledby="daily-progress-label">
-            <div class="progress-label" id="daily-progress-label">Daily Progress</div>
-            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-wrap">
+            <div class="progress-label">Daily Progress</div>
+            <div class="progress-bar">
               <div class="progress-fill" id="progressFill"></div>
             </div>
-          </section>
+          </div>
 
           <button id="resetBtn" class="reset-btn" aria-label="Reset day">
             Reset Day
@@ -61,78 +59,85 @@
           </button>
 
           <!-- Mood -->
-          <section class="mood" role="radiogroup" aria-label="Mood selector">
-            <span role="radio" tabindex="0" data-mood="1" aria-label="Slightly happy">🙂</span>
-            <span role="radio" tabindex="0" data-mood="2" aria-label="Very happy">😍</span>
-            <span role="radio" tabindex="0" data-mood="3" aria-label="Neutral">😐</span>
-            <span role="radio" tabindex="0" data-mood="4" aria-label="Sad">😞</span>
-          </section>
+          <div class="mood" aria-label="Mood selector">
+            <span data-mood="1">🙂</span>
+            <span data-mood="2">😍</span>
+            <span data-mood="3">😐</span>
+            <span data-mood="4">😞</span>
+          </div>
 
           <!-- Notes -->
-          <textarea id="notes" placeholder="Notes..." aria-label="Daily notes"></textarea>
+          <textarea id="notes" placeholder="Notes..."></textarea>
 
           <!-- Streak -->
-          <section class="streak" aria-labelledby="streak-label">
-            🔥 Day Streak: <span id="streakCount" aria-live="polite">0</span>
-          </section>
+          <div class="streak">
+            🔥 Day Streak: <span id="streakCount">0</span>
+          </div>
         </div>
 
         <!-- Navigation -->
-        <nav class="nav-row" aria-label="View navigation">
+        <div class="nav-row">
           <button id="prevDay" aria-label="Previous day">◀</button>
           <button id="openWeekly" aria-label="Open weekly analytics">📊 Weekly</button>
           <button id="openMonthly" aria-label="Open monthly analytics">📅 Monthly</button>
           <button id="nextDay" aria-label="Next day">▶</button>
-        </nav>
-      </section>
+        </div>
+      </div>
 
       <!-- ================= WEEKLY ANALYTICS VIEW ================= -->
-      <section class="view" id="weeklyView" aria-labelledby="weekly-heading">
-        <h2 id="weekly-heading">Weekly Progress</h2>
+      <div class="view" id="weeklyView">
+        <h2>Weekly Progress</h2>
         <p class="week-context">
           Week of <strong id="weekRange"></strong>
         </p>
 
-        <div id="weeklyBars" role="list"></div>
+        <div id="weeklyBars"></div>
 
         <button id="backToTracker" aria-label="Back to tracker">
           ⬅ Back
         </button>
-      </section>
+      </div>
 
       <!-- ================= MONTHLY ANALYTICS VIEW ================= -->
-      <section class="view" id="monthlyAnalytics" aria-labelledby="monthly-heading">
+      <div class="view" id="monthlyAnalytics">
         <header class="analytics-header">
-          <h2 id="monthly-heading">January 2026</h2>
+          <h2 id="analyticsMonth">January 2026</h2>
         </header>
 
-        <article class="analytics-card">
+        <div class="analytics-card">
           <p>Monthly Completion</p>
-          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-fill" id="monthCompletion" data-value="0"></div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              id="monthCompletion"
+              data-value="0"
+            ></div>
           </div>
-          <span id="monthCompletionText" aria-live="polite">0%</span>
-        </article>
+          <span id="monthCompletionText">0%</span>
+        </div>
 
-        <article class="analytics-card">
+        <div class="analytics-card">
           <p>Habit-wise Progress</p>
-          <div id="habitAnalytics" role="list"></div>
-        </article>
+          <div id="habitAnalytics"></div>
+        </div>
 
-        <!-- <article class="analytics-card">
+        <div class="analytics-card">
           <p>Weekly Breakdown</p>
-          <div id="weeklyAnalytics" role="list"></div>
-        </article> -->
+          <div id="weeklyAnalytics"></div>
+        </div>
 
         <!-- Jump to Today -->
         <button id="jumpToday" class="fab" aria-label="Jump to today">
           📍
         </button>
 
-        <button id="backToTrackerFromMonthly" aria-label="Back to tracker">
+        <button
+          id="backToTrackerFromMonthly"
+          aria-label="Back to tracker"
+        >
           ⬅ Back
         </button>
-      </section>
+      </div>
 
     </div>
 
