@@ -1,5 +1,5 @@
 /* =====================================================
-   BASE RESET
+   RESET
 ===================================================== */
 * {
   margin: 0;
@@ -7,12 +7,13 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 /* =====================================================
-   ROOT THEME
+   THEME
 ===================================================== */
 :root {
   --bg: #fafafa;
@@ -32,32 +33,36 @@ html, body {
 }
 
 /* =====================================================
-   BODY
+   BODY (iPad SAFE SCROLL)
 ===================================================== */
 body {
-  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-  background: var(--bg);
-  color: var(--text-main);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 14px;
-  overflow: hidden;
+  color: var(--text-main);
+  background: var(--bg);
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* =====================================================
    APP CONTAINER
 ===================================================== */
 .app-container {
-  height: 100vh;
-  width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 /* =====================================================
-   VIEW SYSTEM
+   VIEW SYSTEM (SCROLL SAFE)
 ===================================================== */
 .view {
   display: none;
-  height: 100%;
+  min-height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .view.active {
@@ -66,7 +71,7 @@ body {
 }
 
 /* =====================================================
-   HEADER AREA
+   MAIN APP
 ===================================================== */
 .app {
   padding: 12px;
@@ -76,9 +81,19 @@ body {
   flex: 1;
 }
 
+/* =====================================================
+   HEADERS
+===================================================== */
 h1 {
   text-align: center;
   font-size: 1.5rem;
+  color: var(--primary);
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 8px 0;
   color: var(--primary);
 }
 
@@ -94,7 +109,7 @@ h1 {
 .flip-box {
   background: var(--primary-soft);
   color: var(--primary);
-  padding: 4px 12px;
+  padding: 4px 14px;
   border-radius: 999px;
   font-weight: 600;
   font-size: 0.9rem;
@@ -107,7 +122,8 @@ h1 {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   max-height: 48vh;
 }
 
@@ -177,7 +193,7 @@ h1 {
   font-size: 16px;
   cursor: pointer;
   opacity: 0.25;
-  transition: 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .heart.done {
@@ -186,6 +202,7 @@ h1 {
 
 .heart:hover {
   opacity: 0.6;
+  transform: scale(1.1);
 }
 
 /* =====================================================
@@ -338,4 +355,28 @@ h1 {
 .analytics-row .progress-bar {
   flex: 1;
   height: 6px;
+}
+
+/* =====================================================
+   WEEKLY & MONTHLY SCROLL FIX (iPad)
+===================================================== */
+#weeklyView,
+#monthlyAnalytics {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* =====================================================
+   BACK BUTTON (MONTHLY ONLY)
+===================================================== */
+#backToTrackerFromMonthly {
+  margin: 10px;
+  padding: 8px;
+  background: var(--primary);
+  color: white;
+  border-radius: var(--radius);
+  border: none;
+  font-size: 12px;
 }
