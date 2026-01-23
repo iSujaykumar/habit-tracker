@@ -4,25 +4,48 @@
 
 console.log("Habit Tracker JS - Stable Build");
 
+
+async function loadData() {
+  // Try IndexedDB first
+  const idbHabits = await idbGet("habits", "list");
+  const idbState = await idbGet("state", "tracker");
+
+  if (idbHabits && idbState) {
+    habits = idbHabits;
+    store = idbState;
+    return;
+  }
+
+  // MIGRATION FROM localStorage (ONE TIME)
+  const lsHabits = JSON.parse(localStorage.getItem("habits")) || [];
+  const lsState = JSON.parse(localStorage.getItem("tracker")) || {};
+
+  habits = lsHabits.length ? lsHabits : [
+    { id: crypto.randomUUID(), name: "Drink water" },
+    { id: crypto.randomUUID(), name: "Exercise 30 min" },
+    { id: crypto.randomUUID(), name: "Healthy breakfast" },
+    { id: crypto.randomUUID(), name: "Take breaks" },
+    { id: crypto.randomUUID(), name: "Read 20 min" },
+    { id: crypto.randomUUID(), name: "Meditation" },
+    { id: crypto.randomUUID(), name: "Skincare" },
+    { id: crypto.randomUUID(), name: "Journal" }
+  ];
+
+  store = lsState;
+
+  await idbSet("habits", "list", habits);
+  await idbSet("state", "tracker", store);
+}
+
 /* =====================================================
    STATE
 ===================================================== */
 
 // Load habits or defaults
-let habits = JSON.parse(localStorage.getItem("habits")) || [
-  { id: crypto.randomUUID(), name: "Drink water" },
-  { id: crypto.randomUUID(), name: "Exercise 30 min" },
-  { id: crypto.randomUUID(), name: "Healthy breakfast" },
-  { id: crypto.randomUUID(), name: "Take breaks" },
-  { id: crypto.randomUUID(), name: "Read 20 min" },
-  { id: crypto.randomUUID(), name: "Meditation" },
-  { id: crypto.randomUUID(), name: "Skincare" },
-  { id: crypto.randomUUID(), name: "Journal" }
-];
+let habits = [];
 
 // Tracker data
-let store = JSON.parse(localStorage.getItem("tracker")) || {};
-
+let store = {};
 // Current date (LOCAL, midnight-safe)
 let currentDate = new Date();
 currentDate.setHours(0, 0, 0, 0);
@@ -58,12 +81,14 @@ function getWeekStart(date) {
 ===================================================== */
 
 function saveStore() {
-  localStorage.setItem("tracker", JSON.stringify(store));
+  idbSet("state", "tracker", store);
 }
 
+
 function saveHabits() {
-  localStorage.setItem("habits", JSON.stringify(habits));
+  idbSet("habits", "list", habits);
 }
+
 
 function ensureDay(key) {
   if (!store[key]) {
@@ -466,4 +491,4 @@ function loadDay() {
 }
 
 // INIT
-loadDay();
+loadData().then(loadDay);
