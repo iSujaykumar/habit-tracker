@@ -30,10 +30,13 @@ body {
   --text-muted: #6b7280;
 
   --radius: 10px;
+
+  /* 🔒 SINGLE SOURCE OF TRUTH FOR COLUMNS */
+  --grid-cols: 110px repeat(7, 1fr);
 }
 
 /* =====================================================
-   BODY (iPad SAFE SCROLL)
+   BODY (SCROLL SAFE)
 ===================================================== */
 body {
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -42,7 +45,6 @@ body {
   background: var(--bg);
 
   overflow-y: auto;
-  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -56,7 +58,7 @@ body {
 }
 
 /* =====================================================
-   VIEW SYSTEM (SCROLL SAFE)
+   VIEW SYSTEM
 ===================================================== */
 .view {
   display: none;
@@ -116,37 +118,49 @@ h2 {
 }
 
 /* =====================================================
-   TRACKER TABLE
+   TRACKER
 ===================================================== */
 .tracker {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow-x: hidden;
   overflow-y: auto;
   max-height: 48vh;
 }
 
 /* =====================================================
-   GRID STRUCTURE
+   🔒 GRID (ABSOLUTE SYNC)
 ===================================================== */
 .header-row,
 .date-row,
 .habit-row {
   display: grid;
-  grid-template-columns: 110px repeat(7, 1fr);
+  grid-template-columns: var(--grid-cols);
   align-items: center;
+
+  /* 🔴 CRITICAL: NO HORIZONTAL PADDING */
+  padding-left: 0;
+  padding-right: 0;
 }
 
+/* =====================================================
+   HEADER ROW
+===================================================== */
 .header-row {
   background: var(--primary);
   color: white;
   font-size: 11px;
-  padding: 6px 8px;
+  height: 32px;
+}
+
+.header-row > div {
+  background: transparent;
+  text-align: center;
 }
 
 .activity-col {
   text-align: left;
+  padding-left: 8px;
 }
 
 /* =====================================================
@@ -155,9 +169,12 @@ h2 {
 .date-row {
   background: #f3f4f6;
   font-size: 11px;
-  text-align: center;
+  height: 28px;
   color: var(--text-muted);
-  padding: 4px 0;
+}
+
+.date-row > div {
+  text-align: center;
 }
 
 .date-row .current {
@@ -169,7 +186,7 @@ h2 {
    HABIT ROWS
 ===================================================== */
 .habit-row {
-  padding: 6px 8px;
+  height: 32px;
   border-bottom: 1px solid var(--border);
   font-size: 13px;
 }
@@ -179,6 +196,7 @@ h2 {
 }
 
 .habit-name {
+  padding-left: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -193,7 +211,6 @@ h2 {
   font-size: 16px;
   cursor: pointer;
   opacity: 0.25;
-  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .heart.done {
@@ -202,7 +219,6 @@ h2 {
 
 .heart:hover {
   opacity: 0.6;
-  transform: scale(1.1);
 }
 
 /* =====================================================
@@ -311,7 +327,7 @@ h2 {
 }
 
 /* =====================================================
-   WEEKLY VIEW
+   WEEKLY / MONTHLY
 ===================================================== */
 .mood-wave {
   display: flex;
@@ -333,9 +349,6 @@ h2 {
   text-align: center;
 }
 
-/* =====================================================
-   ANALYTICS
-===================================================== */
 .analytics-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -355,10 +368,132 @@ h2 {
 .analytics-row .progress-bar {
   flex: 1;
   height: 6px;
-}
+} */
+
 
 /* =====================================================
-   WEEKLY & MONTHLY SCROLL FIX (iPad)
+   WEEKLY MOOD — GOD TIER
+===================================================== */
+/* .mood-wave {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+
+  padding: 16px;
+  margin: 16px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(245, 247, 250, 0.9)
+  );
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.mood-wave > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  padding: 10px 0;
+  border-radius: 14px;
+
+  transition: all 0.25s ease;
+}
+
+.mood-wave > div:hover {
+  background: rgba(109, 93, 252, 0.06);
+  transform: translateY(-2px);
+}
+
+.mood-wave .emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.mood-wave .day-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  letter-spacing: 0.04em;
+} */
+
+
+/* =====================================================
+   MONTHLY ANALYTICS — GOD TIER
+===================================================== */
+.analytics-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(248, 249, 252, 0.92)
+  );
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+
+  padding: 16px;
+  margin: 16px;
+
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Each row = premium stat line */
+.analytics-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  padding: 8px 0;
+}
+
+.analytics-row:not(:last-child) {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+/* Progress bar = luxury depth */
+.analytics-row .progress-bar {
+  height: 8px;
+  background: linear-gradient(
+    180deg,
+    #e5e7eb,
+    #f3f4f6
+  );
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.analytics-row .progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #6d5dfc,
+    #8b7cff
+  );
+  box-shadow:
+    0 0 12px rgba(109, 93, 252, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+}
+
+
+
+/* =====================================================
+   SCROLL FIX (iPAD)
 ===================================================== */
 #weeklyView,
 #monthlyAnalytics {
@@ -367,16 +502,160 @@ h2 {
   padding-bottom: 80px;
   -webkit-overflow-scrolling: touch;
 }
-
 /* =====================================================
-   BACK BUTTON (MONTHLY ONLY)
+   DARK MODE — SYSTEM BASED
 ===================================================== */
-#backToTrackerFromMonthly {
-  margin: 10px;
-  padding: 8px;
-  background: var(--primary);
-  color: white;
-  border-radius: var(--radius);
-  border: none;
-  font-size: 12px;
+
+@media (prefers-color-scheme: dark) {
+
+  :root {
+    --bg: #0b0e14;
+    --surface: #111827;
+    --border: rgba(255, 255, 255, 0.08);
+
+    --primary: #8b7cff;
+    --primary-soft: rgba(139, 124, 255, 0.15);
+
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-main);
+  }
+
+  /* Cards / containers */
+  .tracker,
+  .analytics-card,
+  #weeklyMoodWave,
+  #weeklyBars > div {
+    background: var(--surface);
+    border-color: var(--border);
+    box-shadow: none;
+  }
+
+  /* Header row stays readable */
+  .header-row {
+    background: linear-gradient(180deg, #5b4df5, #4f46e5);
+  }
+
+  /* Date row */
+  .date-row {
+    background: #0f172a;
+    color: var(--text-muted);
+  }
+
+  /* Progress bars */
+  .progress-bar {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .progress-fill {
+    background: linear-gradient(
+      90deg,
+      #8b7cff,
+      #a99bff
+    );
+  }
+
+  /* Buttons */
+  button {
+    background: #1f2937;
+    color: var(--text-main);
+  }
+
+  #addHabitBtn {
+    background: linear-gradient(180deg, #8b7cff, #6d5dfc);
+    color: #fff;
+  }
+
+  /* Mood emojis stay natural */
+  .mood span {
+    filter: none;
+  }
+
+  /* Hearts STILL RED */
+  .heart,
+  .heart.done {
+    color: #b11226;
+    text-shadow: 0 0 10px rgba(177, 18, 38, 0.55);
+  }
+}
+/* =====================================================
+   APPEND-ONLY FIXES (DO NOT EDIT ABOVE)
+===================================================== */
+
+/* ---------- PERSISTENT DARK MODE (CLASS-BASED) ---------- */
+.dark {
+  --bg: #0b0e14;
+  --surface: #111827;
+  --border: rgba(255, 255, 255, 0.08);
+
+  --primary: #8b7cff;
+  --primary-soft: rgba(139, 124, 255, 0.15);
+
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+}
+
+.dark body {
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+/* Ensure common containers follow variables */
+.dark .tracker,
+.dark .analytics-card,
+.dark .mood-wave,
+.dark .nav-row,
+.dark .streak {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* Header + date rows in dark */
+.dark .header-row {
+  background: linear-gradient(180deg, #5b4df5, #4f46e5);
+}
+
+.dark .date-row {
+  background: #0f172a;
+  color: var(--text-muted);
+}
+
+/* Buttons in dark */
+.dark button {
+  background: #1f2937;
+  color: var(--text-main);
+}
+
+.dark #addHabitBtn {
+  background: linear-gradient(180deg, #8b7cff, #6d5dfc);
+  color: #fff;
+}
+
+/* Progress bars in dark */
+.dark .progress-bar {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.dark .progress-fill {
+  background: linear-gradient(90deg, #8b7cff, #a99bff);
+}
+
+/* ---------- HEARTS: FORCE REAL RED (NO YELLOW) ---------- */
+.heart {
+  color: #b11226;
+}
+
+.heart.done {
+  color: #b11226;
+  text-shadow: 0 0 8px rgba(177, 18, 38, 0.45);
+}
+
+/* Ensure hearts stay red in dark */
+.dark .heart,
+.dark .heart.done {
+  color: #b11226;
 }

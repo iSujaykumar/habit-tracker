@@ -4,7 +4,6 @@
 
 console.log("Habit Tracker JS - Stable Build");
 
-
 async function loadData() {
   // Try IndexedDB first
   const idbHabits = await idbGet("habits", "list");
@@ -20,16 +19,18 @@ async function loadData() {
   const lsHabits = JSON.parse(localStorage.getItem("habits")) || [];
   const lsState = JSON.parse(localStorage.getItem("tracker")) || {};
 
-  habits = lsHabits.length ? lsHabits : [
-    { id: crypto.randomUUID(), name: "Drink water" },
-    { id: crypto.randomUUID(), name: "Exercise 30 min" },
-    { id: crypto.randomUUID(), name: "Healthy breakfast" },
-    { id: crypto.randomUUID(), name: "Take breaks" },
-    { id: crypto.randomUUID(), name: "Read 20 min" },
-    { id: crypto.randomUUID(), name: "Meditation" },
-    { id: crypto.randomUUID(), name: "Skincare" },
-    { id: crypto.randomUUID(), name: "Journal" }
-  ];
+  habits = lsHabits.length
+    ? lsHabits
+    : [
+        { id: crypto.randomUUID(), name: "Drink water" },
+        { id: crypto.randomUUID(), name: "Exercise 30 min" },
+        { id: crypto.randomUUID(), name: "Healthy breakfast" },
+        { id: crypto.randomUUID(), name: "Take breaks" },
+        { id: crypto.randomUUID(), name: "Read 20 min" },
+        { id: crypto.randomUUID(), name: "Meditation" },
+        { id: crypto.randomUUID(), name: "Skincare" },
+        { id: crypto.randomUUID(), name: "Journal" },
+      ];
 
   store = lsState;
 
@@ -84,11 +85,9 @@ function saveStore() {
   idbSet("state", "tracker", store);
 }
 
-
 function saveHabits() {
   idbSet("habits", "list", habits);
 }
-
 
 function ensureDay(key) {
   if (!store[key]) {
@@ -134,7 +133,7 @@ const els = {
   jumpToday: document.getElementById("jumpToday"),
 
   resetBtn: document.getElementById("resetBtn"),
-  addHabitBtn: document.getElementById("addHabitBtn")
+  addHabitBtn: document.getElementById("addHabitBtn"),
 };
 
 /* =====================================================
@@ -142,8 +141,8 @@ const els = {
 ===================================================== */
 
 function showView(target) {
-  [els.trackerView, els.weeklyView, els.monthlyAnalytics].forEach(v =>
-    v.classList.remove("active")
+  [els.trackerView, els.weeklyView, els.monthlyAnalytics].forEach((v) =>
+    v.classList.remove("active"),
   );
   target.classList.add("active");
 }
@@ -158,9 +157,8 @@ els.openMonthly.onclick = () => {
   renderMonthly();
 };
 
-els.backToTracker.onclick =
-  els.backToTrackerFromMonthly.onclick =
-    () => showView(els.trackerView);
+els.backToTracker.onclick = els.backToTrackerFromMonthly.onclick = () =>
+  showView(els.trackerView);
 
 // els.jumpToday.onclick = () => {
 //   currentDate = new Date();
@@ -197,7 +195,7 @@ function buildHabitGrid() {
   }
 
   // Habit rows
-  habits.forEach(habit => {
+  habits.forEach((habit) => {
     const row = document.createElement("div");
     row.className = "habit-row";
 
@@ -212,7 +210,7 @@ function buildHabitGrid() {
 
       if (choice === "DELETE") {
         if (confirm("Confirm delete habit?")) {
-          habits = habits.filter(h => h.id !== habit.id);
+          habits = habits.filter((h) => h.id !== habit.id);
           saveHabits();
           buildHabitGrid();
         }
@@ -239,7 +237,7 @@ function buildHabitGrid() {
 
       const heart = document.createElement("div");
       heart.className = "heart";
-      heart.textContent = "💛";
+      heart.textContent = "♥";
 
       if (store[dk].habits[habit.id]) {
         heart.classList.add("done");
@@ -267,7 +265,7 @@ function buildHabitGrid() {
 
 function updateProgress() {
   const key = getDateKey();
-  const done = habits.filter(h => store[key].habits[h.id]).length;
+  const done = habits.filter((h) => store[key].habits[h.id]).length;
   const pct = habits.length ? Math.round((done / habits.length) * 100) : 0;
   els.progressFill.style.width = pct + "%";
   calcStreak();
@@ -275,7 +273,7 @@ function updateProgress() {
 
 function isDayComplete(date) {
   const k = getDateKey(date);
-  return store[k] && habits.every(h => store[k].habits[h.id]);
+  return store[k] && habits.every((h) => store[k].habits[h.id]);
 }
 
 function calcStreak() {
@@ -294,7 +292,7 @@ function calcStreak() {
    MOOD
 ===================================================== */
 
-document.querySelectorAll(".mood span").forEach(span => {
+document.querySelectorAll(".mood span").forEach((span) => {
   span.onclick = () => {
     const key = getDateKey();
     store[key].mood = span.dataset.mood;
@@ -302,7 +300,7 @@ document.querySelectorAll(".mood span").forEach(span => {
 
     document
       .querySelectorAll(".mood span")
-      .forEach(s => s.classList.remove("active"));
+      .forEach((s) => s.classList.remove("active"));
 
     span.classList.add("active");
   };
@@ -345,7 +343,7 @@ function renderWeekly() {
 
   els.weeklyBars.innerHTML = "";
 
-  habits.forEach(h => {
+  habits.forEach((h) => {
     let count = 0;
     for (let i = 0; i < 7; i++) {
       const d = new Date(start);
@@ -384,7 +382,7 @@ function renderMonthly() {
 
   els.analyticsMonth.textContent = currentDate.toLocaleString("default", {
     month: "long",
-    year: "numeric"
+    year: "numeric",
   });
 
   els.monthCompletion.style.width = pct + "%";
@@ -392,7 +390,7 @@ function renderMonthly() {
 
   els.habitAnalytics.innerHTML = "";
 
-  habits.forEach(h => {
+  habits.forEach((h) => {
     let c = 0;
     for (let d = 1; d <= lastDay; d++) {
       if (store[getDateKey(new Date(y, m, d))]?.habits[h.id]) c++;
@@ -475,15 +473,15 @@ function loadDay() {
   ensureDay(key);
 
   els.monthFlip.textContent = currentDate.toLocaleString("default", {
-    month: "long"
+    month: "long",
   });
 
   els.dateFlip.textContent = currentDate.getDate();
 
-  document.querySelectorAll(".mood span").forEach(span => {
+  document.querySelectorAll(".mood span").forEach((span) => {
     span.classList.toggle(
       "active",
-      span.dataset.mood === String(store[key].mood)
+      span.dataset.mood === String(store[key].mood),
     );
   });
 
