@@ -1,0 +1,972 @@
+/* ================= ROOT ================= */
+:root {
+  --bg-main: #e7c6d7;
+  --app-bg: #fff3dc;
+  --card-bg: #ffffff;
+  --accent: #845ef7;
+  --success: #22c55e;
+  --warning: #ff9f1c;
+  --danger: #ff6b6b;
+  --text-primary: #1e1b4b;
+  --text-secondary: rgba(30, 27, 75, 0.7);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.2);
+  --border-radius: 20px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.3);
+}
+
+/* ================= DARK MODE ================= */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-main: #1a1638;
+    --app-bg: #2d1b69;
+    --card-bg: #3a267a;
+    --text-primary: #e9d5ff;
+    --text-secondary: rgba(233, 213, 255, 0.7);
+    --glass-bg: rgba(58, 38, 122, 0.4);
+    --glass-border: rgba(132, 94, 247, 0.2);
+  }
+}
+
+/* ================= GLOBAL ================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-main);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--text-primary);
+  overscroll-behavior: none;
+  transition: var(--transition);
+}
+
+/* ================= APP CONTAINER ================= */
+.app-container {
+  position: relative;
+  width: min(100%, 460px);
+  padding: 16px;
+  perspective: 1200px;
+}
+
+/* ================= CARD BASE ================= */
+.app,
+#weeklyView,
+#monthlyAnalytics {
+  background: var(--app-bg);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  transition: var(--transition);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* ================= HEADINGS ================= */
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--accent), #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+/* ================= FLIP DATE ================= */
+.flip-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.flip-box {
+  background: #0026ff;
+  border-radius: 16px;
+  padding: 12px 20px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 20px;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.flip-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.flip-box:hover::before {
+  opacity: 1;
+}
+
+.flip-box:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+.flip-card {
+  transition: var(--transition);
+}
+
+/* ================= TRACKER GRID ================= */
+.tracker {
+  margin-bottom: 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--glass-border);
+}
+
+.header-row,
+.habit-row {
+  display: grid;
+  grid-template-columns: 3fr repeat(7, 1fr);
+  align-items: center;
+  padding: 12px 8px;
+}
+
+.header-row {
+  background: linear-gradient(135deg, var(--accent), #a78bfa);
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.activity-col {
+  padding-left: 16px;
+}
+
+.habit-row {
+  border-bottom: 1px solid rgba(132, 94, 247, 0.1);
+  transition: background 0.2s ease;
+}
+
+.habit-row:hover {
+  background: rgba(132, 94, 247, 0.12);
+}
+
+.habit-name {
+  padding-left: 16px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ================= HEARTS ================= */
+.heart {
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: var(--transition);
+  user-select: none;
+  transform: scale(1);
+}
+
+.heart:hover {
+  opacity: 0.7;
+  transform: scale(1.2);
+}
+
+.heart.done {
+  opacity: 1;
+  transform: scale(1.1);
+  animation: heartbeat 0.8s ease infinite alternate;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1.1); }
+  100% { transform: scale(1.25); }
+}
+
+/* ================= PROGRESS ================= */
+.progress-wrap {
+  margin: 24px 0;
+}
+
+.progress-label {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.progress-bar {
+  height: 16px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--warning), #ffbf69);
+  border-radius: 12px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(255, 159, 28, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ================= BUTTONS ================= */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 16px;
+  font-weight: 600;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+button:hover::before {
+  opacity: 1;
+}
+
+button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--danger), #ff8787);
+  color: white;
+  font-size: 16px;
+  margin: 16px 0;
+}
+
+.add-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #4dabf7, #60a5fa);
+  color: white;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+/* ================= MOOD ================= */
+.mood {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 24px 0;
+  font-size: 36px;
+}
+
+.mood span {
+  opacity: 0.4;
+  cursor: pointer;
+  transition: var(--transition);
+  transform: scale(1);
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.mood span:hover {
+  opacity: 0.8;
+  transform: scale(1.2);
+  background: rgba(132, 94, 247, 0.2);
+}
+
+.mood span.active {
+  opacity: 1;
+  transform: scale(1.3);
+  background: rgba(132, 94, 247, 0.3);
+  box-shadow: 0 0 20px rgba(132, 94, 247, 0.5);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 20px rgba(132, 94, 247, 0.5); }
+  50% { box-shadow: 0 0 30px rgba(132, 94, 247, 0.8); }
+  100% { box-shadow: 0 0 20px rgba(132, 94, 247, 0.5); }
+}
+
+/* ================= NOTES ================= */
+textarea {
+  width: 100%;
+  height: 100px;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  padding: 16px;
+  font-size: 15px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  resize: none;
+  transition: var(--transition);
+  color: var(--text-primary);
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(132, 94, 247, 0.4);
+  border-color: var(--accent);
+}
+
+/* ================= STREAK ================= */
+.streak {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 24px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #ff9f1c, #ffd166);
+  border-radius: 20px;
+  color: white;
+  box-shadow: var(--shadow-md);
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 10px 30px rgba(255, 159, 28, 0.4); }
+  100% { box-shadow: 0 15px 40px rgba(255, 159, 28, 0.6); }
+}
+
+/* ================= NAV ================= */
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 12px;
+}
+
+.nav-row button {
+  flex: 1;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--accent), #a78bfa);
+  color: white;
+  font-size: 15px;
+  border-radius: 16px;
+}
+
+#backToTracker,
+#backToTrackerFromMonthly {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--accent), #a78bfa);
+  color: white;
+  margin-top: 24px;
+  font-size: 16px;
+}
+
+/* ================= VIEWS ================= */
+.view {
+  position: absolute;
+  inset: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transform: rotateY(90deg) translateZ(100px) scale(0.9);
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  backface-visibility: hidden;
+}
+
+.view.active {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+  transform: rotateY(0deg) translateZ(0) scale(1);
+}
+
+/* ================= ANALYTICS ================= */
+.analytics-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  padding: 20px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-md);
+}
+
+.analytics-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0;
+  font-size: 15px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.analytics-row .progress-bar {
+  flex: 1;
+  margin: 0 16px;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+#monthlyAnalytics .progress-fill {
+  background: linear-gradient(90deg, #4ade80, var(--success));
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4);
+}
+
+/* ================= WEEKLY BARS ================= */
+#weeklyBars > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--glass-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--glass-border);
+  transition: var(--transition);
+}
+
+#weeklyBars > div:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+#weeklyBars > div > span {
+  width: 40px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+#weeklyBars .progress-bar {
+  flex: 1;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ================= FAB ================= */
+.fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--success), #86efac);
+  color: white;
+  font-size: 30px;
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  place-items: center;
+  transition: var(--transition);
+  z-index: 100;
+  border: 3px solid white;
+}
+
+.fab:hover {
+  transform: scale(1.15) rotate(20deg);
+  box-shadow: 0 25px 50px rgba(34, 197, 94, 0.5);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 8px;
+  }
+  
+  .flip-bar {
+    gap: 8px;
+  }
+  
+  .flip-box {
+    padding: 10px 16px;
+    font-size: 18px;
+  }
+  
+  .mood {
+    gap: 16px;
+    font-size: 32px;
+  }
+  
+  .nav-row {
+    flex-wrap: wrap;
+  }
+  
+  .nav-row button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* ================= FULL SCREEN FIT & SCALING ================= */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-main);
+}
+
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  padding: 8px;
+  perspective: 1200px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main card takes full available space */
+.app,
+#weeklyView,
+#monthlyAnalytics {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: hidden;
+}
+
+/* Header fixed height */
+header {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+/* Tracker takes available space, scrolls internally if needed */
+.tracker {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#habitRows {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Horizontal scroll for grid */
+.tracker {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.header-row,
+.habit-row {
+  min-width: 560px;
+  flex-shrink: 0;
+}
+
+.header-row > div,
+.habit-row > div {
+  flex-shrink: 0;
+}
+
+/* Progress & buttons fixed */
+.progress-wrap,
+.horizontal-summary,
+.action-buttons {
+  flex-shrink: 0;
+  margin: 12px 0;
+}
+
+/* Navigation fixed at bottom */
+.nav-row {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+/* Hide all scrollbars globally but keep functionality */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure views fill height */
+.view {
+  height: 100%;
+  inset: 0;
+  padding: 8px;
+}
+
+.view.active {
+  position: static;
+}
+
+/* ================= STREAK AND NOTES POSITIONING ================= */
+.streak {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #ff9f1c, #ffd166);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+
+#notes {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 200px;
+  height: 60px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  resize: none;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+
+#notes:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(132, 94, 247, 0.3);
+}
+
+/* ================= MONTHLY ANALYTICS SCROLLABLE SECTIONS ================= */
+#monthlyAnalytics {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#habitAnalytics,
+#weeklyAnalytics,
+#moodSummary {
+  flex: 1;
+  min-height: 0;
+  max-height: 35vh;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Custom scrollbar for analytics sections (visible but thin) */
+#habitAnalytics::-webkit-scrollbar,
+#weeklyAnalytics::-webkit-scrollbar,
+#moodSummary::-webkit-scrollbar {
+  width: 6px;
+  display: block;
+}
+
+#habitAnalytics::-webkit-scrollbar-track,
+#weeklyAnalytics::-webkit-scrollbar-track,
+#moodSummary::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#habitAnalytics::-webkit-scrollbar-thumb,
+#weeklyAnalytics::-webkit-scrollbar-thumb,
+#moodSummary::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+#habitAnalytics::-webkit-scrollbar-thumb:hover,
+#weeklyAnalytics::-webkit-scrollbar-thumb:hover,
+#moodSummary::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox */
+#habitAnalytics,
+#weeklyAnalytics,
+#moodSummary {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* Mood Summary specific styling */
+#moodSummary {
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+#moodSummary strong {
+  font-size: 18px;
+  display: block;
+  margin: 12px 0 8px;
+}
+/* Add/replace these rules in your CSS for side-by-side layout in Monthly view */
+
+#monthlyAnalytics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px;
+  overflow: hidden;
+}
+
+/* Side-by-side container for Habit-wise and Weekly Breakdown */
+#monthlyAnalytics > .side-by-side {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Each side takes equal width and scrolls independently */
+#monthlyAnalytics .side-by-side > .analytics-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#monthlyAnalytics .side-by-side .analytics-card p {
+  flex-shrink: 0;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+#monthlyAnalytics .side-by-side #habitAnalytics,
+#monthlyAnalytics .side-by-side #weeklyAnalytics {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Mood chart card (full width, below side-by-side) */
+#monthlyAnalytics > .analytics-card:nth-child(4) { /* Mood Summary card */
+  flex-shrink: 0;
+}
+
+/* Reduce chart height */
+#moodChart {
+  height: 140px !important;
+}
+
+/* Buttons row */
+#monthlyAnalytics > .buttons-row {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+#jumpToday,
+#backToTrackerFromMonthly {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+}
+/* Add/replace these rules in your CSS to fix vertical alignment of hearts with header days */
+
+/* Ensure header and habit rows have exactly the same grid structure and alignment */
+.header-row,
+.habit-row {
+  display: grid;
+  grid-template-columns: 3fr repeat(7, 1fr);
+  align-items: center;      /* This centers items vertically */
+  justify-items: center;    /* This centers items horizontally in their columns */
+  padding: 12px 8px;
+}
+
+/* Header days - center text */
+.header-row > div:not(.activity-col) {
+  text-align: center;
+  width: 100%;
+}
+
+/* Hearts - ensure they take full cell and center */
+.heart {
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: var(--transition);
+  user-select: none;
+  transform: scale(1);
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;      /* Perfect vertical + horizontal centering */
+}
+
+/* Habit name - keep left-aligned */
+.habit-name {
+  padding-left: 16px;
+  font-weight: 500;
+  font-size: 14px;
+  justify-self: start;      /* Left-align only the name column */
+}
+
+/* Activity column header */
+.activity-col {
+  padding-left: 16px;
+  justify-self: start;
+}
+.reset-buttons {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.reset-buttons button {
+  flex: 1;
+  padding: 16px;
+  font-size: 16px;
+}
+
+.total-badges {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.weekly-completion {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.weekly-percent {
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.weekly-subtext {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.badge-warning {
+  text-align: center;
+  background: #ffbf69;
+  padding: 8px;
+  border-radius: 8px;
+  color: #1e1b4b;
+  margin-bottom: 16px;
+}
+
+.monthly-badge-status {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 8px;
+}
+.weekly-charts-row {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.weekly-chart-container {
+  flex: 1;
+  max-width: 50%;
+  height: 220px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--glass-border);
+}
+
+.weekly-motivation {
+  text-align: center;
+  margin: 32px 0 40px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(132,94,247,0.15), rgba(167,139,250,0.1));
+  border-radius: 20px;
+  border: 1px solid rgba(132,94,247,0.3);
+}
+
+.motivation-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.motivation-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
