@@ -208,3 +208,34 @@ h1, h2 {
     padding: 16px;
   }
 }
+.view.active {
+  animation: pageFade .25s ease;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.heart {
+  transition: transform .15s ease, opacity .15s ease;
+}
+
+.heart:active {
+  transform: scale(0.9);
+}
+.progress-fill {
+  transition: width .35s ease-out;
+}
+.analytics-row {
+  transition: background .2s ease;
+}
+
+.analytics-row:hover {
+  background: rgba(132,94,247,0.12);
+}
