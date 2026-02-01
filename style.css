@@ -40,15 +40,38 @@
   padding: 0;
 }
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background: var(--bg-main);
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--text-primary);
   overscroll-behavior: none;
   transition: var(--transition);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Hide all scrollbars globally but keep functionality */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 /* ================= APP CONTAINER ================= */
@@ -57,6 +80,12 @@ body {
   width: min(100%, 460px);
   padding: 16px;
   perspective: 1200px;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ================= CARD BASE ================= */
@@ -72,6 +101,11 @@ body {
   transition: var(--transition);
   max-height: 90vh;
   overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: hidden;
 }
 
 /* ================= HEADINGS ================= */
@@ -92,6 +126,13 @@ h2 {
   text-align: center;
   margin-bottom: 16px;
   color: var(--text-primary);
+}
+
+/* ================= HEADER (for streak/notes) ================= */
+header {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  position: relative;
 }
 
 /* ================= FLIP DATE ================= */
@@ -117,10 +158,10 @@ h2 {
 }
 
 .flip-box::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
   opacity: 0;
   transition: var(--transition);
 }
@@ -147,6 +188,19 @@ h2 {
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--glass-border);
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#habitRows {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .header-row,
@@ -154,7 +208,10 @@ h2 {
   display: grid;
   grid-template-columns: 3fr repeat(7, 1fr);
   align-items: center;
+  justify-items: center;
   padding: 12px 8px;
+  min-width: 560px;
+  flex-shrink: 0;
 }
 
 .header-row {
@@ -166,8 +223,14 @@ h2 {
   letter-spacing: 0.5px;
 }
 
+.header-row > div:not(.activity-col) {
+  text-align: center;
+  width: 100%;
+}
+
 .activity-col {
   padding-left: 16px;
+  justify-self: start;
 }
 
 .habit-row {
@@ -183,6 +246,7 @@ h2 {
   padding-left: 16px;
   font-weight: 500;
   font-size: 14px;
+  justify-self: start;
 }
 
 /* ================= HEARTS ================= */
@@ -194,6 +258,10 @@ h2 {
   transition: var(--transition);
   user-select: none;
   transform: scale(1);
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
 }
 
 .heart:hover {
@@ -208,13 +276,25 @@ h2 {
 }
 
 @keyframes heartbeat {
-  0% { transform: scale(1.1); }
-  100% { transform: scale(1.25); }
+  0% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.25);
+  }
 }
 
 /* ================= PROGRESS ================= */
 .progress-wrap {
   margin: 24px 0;
+  flex-shrink: 0;
+  margin: 12px 0;
+}
+
+.horizontal-summary,
+.action-buttons {
+  flex-shrink: 0;
+  margin: 12px 0;
 }
 
 .progress-label {
@@ -246,16 +326,25 @@ h2 {
 }
 
 .progress-fill::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   animation: shimmer 2s infinite linear;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* ================= BUTTONS ================= */
@@ -271,10 +360,10 @@ button {
 }
 
 button::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
   opacity: 0;
   transition: var(--transition);
 }
@@ -343,9 +432,15 @@ button:active {
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 20px rgba(132, 94, 247, 0.5); }
-  50% { box-shadow: 0 0 30px rgba(132, 94, 247, 0.8); }
-  100% { box-shadow: 0 0 20px rgba(132, 94, 247, 0.5); }
+  0% {
+    box-shadow: 0 0 20px rgba(132, 94, 247, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(132, 94, 247, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(132, 94, 247, 0.5);
+  }
 }
 
 /* ================= NOTES ================= */
@@ -370,7 +465,7 @@ textarea:focus {
   border-color: var(--accent);
 }
 
-/* ================= STREAK ================= */
+/* ================= STREAK AND NOTES POSITIONING ================= */
 .streak {
   text-align: center;
   font-size: 22px;
@@ -382,11 +477,49 @@ textarea:focus {
   color: white;
   box-shadow: var(--shadow-md);
   animation: glow 2s infinite alternate;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #ff9f1c, #ffd166);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
 }
 
 @keyframes glow {
-  0% { box-shadow: 0 10px 30px rgba(255, 159, 28, 0.4); }
-  100% { box-shadow: 0 15px 40px rgba(255, 159, 28, 0.6); }
+  0% {
+    box-shadow: 0 10px 30px rgba(255, 159, 28, 0.4);
+  }
+  100% {
+    box-shadow: 0 15px 40px rgba(255, 159, 28, 0.6);
+  }
+}
+
+#notes {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 200px;
+  height: 60px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  resize: none;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+
+#notes:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(132, 94, 247, 0.3);
 }
 
 /* ================= NAV ================= */
@@ -395,6 +528,9 @@ textarea:focus {
   justify-content: space-between;
   margin-top: 24px;
   gap: 12px;
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 12px;
 }
 
 .nav-row button {
@@ -425,6 +561,9 @@ textarea:focus {
   transform: rotateY(90deg) translateZ(100px) scale(0.9);
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   backface-visibility: hidden;
+  height: 100%;
+  inset: 0;
+  padding: 8px;
 }
 
 .view.active {
@@ -432,6 +571,7 @@ textarea:focus {
   opacity: 1;
   pointer-events: auto;
   transform: rotateY(0deg) translateZ(0) scale(1);
+  position: static;
 }
 
 /* ================= ANALYTICS ================= */
@@ -507,213 +647,14 @@ textarea:focus {
   position: relative;
 }
 
-/* ================= FAB ================= */
-.fab {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--success), #86efac);
-  color: white;
-  font-size: 30px;
-  box-shadow: var(--shadow-lg);
-  display: grid;
-  place-items: center;
-  transition: var(--transition);
-  z-index: 100;
-  border: 3px solid white;
-}
-
-.fab:hover {
-  transform: scale(1.15) rotate(20deg);
-  box-shadow: 0 25px 50px rgba(34, 197, 94, 0.5);
-}
-
-/* ================= RESPONSIVE ================= */
-@media (max-width: 480px) {
-  .app-container {
-    padding: 8px;
-  }
-  
-  .flip-bar {
-    gap: 8px;
-  }
-  
-  .flip-box {
-    padding: 10px 16px;
-    font-size: 18px;
-  }
-  
-  .mood {
-    gap: 16px;
-    font-size: 32px;
-  }
-  
-  .nav-row {
-    flex-wrap: wrap;
-  }
-  
-  .nav-row button {
-    padding: 12px;
-    font-size: 14px;
-  }
-}
-
-/* ================= FULL SCREEN FIT & SCALING ================= */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--bg-main);
-}
-
-.app-container {
-  width: 100vw;
-  height: 100vh;
-  max-width: none;
-  padding: 8px;
-  perspective: 1200px;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Main card takes full available space */
-.app,
-#weeklyView,
-#monthlyAnalytics {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  overflow: hidden;
-}
-
-/* Header fixed height */
-header {
-  flex-shrink: 0;
-  margin-bottom: 12px;
-  position: relative;
-}
-
-/* Tracker takes available space, scrolls internally if needed */
-.tracker {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-#habitRows {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-}
-
-/* Horizontal scroll for grid */
-.tracker {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.header-row,
-.habit-row {
-  min-width: 560px;
-  flex-shrink: 0;
-}
-
-.header-row > div,
-.habit-row > div {
-  flex-shrink: 0;
-}
-
-/* Progress & buttons fixed */
-.progress-wrap,
-.horizontal-summary,
-.action-buttons {
-  flex-shrink: 0;
-  margin: 12px 0;
-}
-
-/* Navigation fixed at bottom */
-.nav-row {
-  flex-shrink: 0;
-  margin-top: auto;
-  padding-top: 12px;
-}
-
-/* Hide all scrollbars globally but keep functionality */
-* {
-  scrollbar-width: none;
-}
-
-*::-webkit-scrollbar {
-  display: none;
-}
-
-/* Ensure views fill height */
-.view {
-  height: 100%;
-  inset: 0;
-  padding: 8px;
-}
-
-.view.active {
-  position: static;
-}
-
-/* ================= STREAK AND NOTES POSITIONING ================= */
-.streak {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: linear-gradient(135deg, #ff9f1c, #ffd166);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 700;
-  box-shadow: var(--shadow-sm);
-  z-index: 10;
-}
-
-#notes {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  width: 200px;
-  height: 60px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  padding: 8px;
-  font-size: 14px;
-  color: var(--text-primary);
-  resize: none;
-  box-shadow: var(--shadow-sm);
-  z-index: 10;
-}
-
-#notes:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(132, 94, 247, 0.3);
-}
-
 /* ================= MONTHLY ANALYTICS SCROLLABLE SECTIONS ================= */
 #monthlyAnalytics {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  gap: 12px;
+  padding: 12px 16px;
+  overflow: hidden;
 }
 
 #habitAnalytics,
@@ -772,15 +713,6 @@ header {
   display: block;
   margin: 12px 0 8px;
 }
-/* Add/replace these rules in your CSS for side-by-side layout in Monthly view */
-
-#monthlyAnalytics {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px 16px;
-  overflow: hidden;
-}
 
 /* Side-by-side container for Habit-wise and Weekly Breakdown */
 #monthlyAnalytics > .side-by-side {
@@ -814,7 +746,7 @@ header {
 }
 
 /* Mood chart card (full width, below side-by-side) */
-#monthlyAnalytics > .analytics-card:nth-child(4) { /* Mood Summary card */
+#monthlyAnalytics > .analytics-card:nth-child(4) {
   flex-shrink: 0;
 }
 
@@ -836,52 +768,77 @@ header {
   padding: 12px;
   font-size: 14px;
 }
-/* Add/replace these rules in your CSS to fix vertical alignment of hearts with header days */
 
-/* Ensure header and habit rows have exactly the same grid structure and alignment */
-.header-row,
-.habit-row {
+/* ================= FAB ================= */
+.fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--success), #86efac);
+  color: white;
+  font-size: 30px;
+  box-shadow: var(--shadow-lg);
   display: grid;
-  grid-template-columns: 3fr repeat(7, 1fr);
-  align-items: center;      /* This centers items vertically */
-  justify-items: center;    /* This centers items horizontally in their columns */
-  padding: 12px 8px;
-}
-
-/* Header days - center text */
-.header-row > div:not(.activity-col) {
-  text-align: center;
-  width: 100%;
-}
-
-/* Hearts - ensure they take full cell and center */
-.heart {
-  font-size: 24px;
-  text-align: center;
-  cursor: pointer;
-  opacity: 0.3;
+  place-items: center;
   transition: var(--transition);
-  user-select: none;
-  transform: scale(1);
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;      /* Perfect vertical + horizontal centering */
+  z-index: 100;
+  border: 3px solid white;
 }
 
-/* Habit name - keep left-aligned */
-.habit-name {
-  padding-left: 16px;
-  font-weight: 500;
-  font-size: 14px;
-  justify-self: start;      /* Left-align only the name column */
+.fab:hover {
+  transform: scale(1.15) rotate(20deg);
+  box-shadow: 0 25px 50px rgba(34, 197, 94, 0.5);
 }
 
-/* Activity column header */
-.activity-col {
-  padding-left: 16px;
-  justify-self: start;
+/* ================= RESPONSIVE ================= */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 8px;
+  }
+
+  .flip-bar {
+    gap: 8px;
+  }
+
+  .flip-box {
+    padding: 10px 16px;
+    font-size: 18px;
+  }
+
+  .mood {
+    gap: 16px;
+    font-size: 32px;
+  }
+
+  .nav-row {
+    flex-wrap: wrap;
+  }
+
+  .nav-row button {
+    padding: 12px;
+    font-size: 14px;
+  }
 }
+
+/* ================= iPad SPECIFIC ================= */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container,
+  .card,
+  .section {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .reset-btn,
+  .add-btn {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}
+
 .reset-buttons {
   display: flex;
   gap: 8px;
@@ -931,6 +888,7 @@ header {
   font-size: 16px;
   margin-top: 8px;
 }
+
 .weekly-charts-row {
   display: flex;
   gap: 16px;
@@ -954,9 +912,13 @@ header {
   text-align: center;
   margin: 32px 0 40px 0;
   padding: 20px;
-  background: linear-gradient(135deg, rgba(132,94,247,0.15), rgba(167,139,250,0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(132, 94, 247, 0.15),
+    rgba(167, 139, 250, 0.1)
+  );
   border-radius: 20px;
-  border: 1px solid rgba(132,94,247,0.3);
+  border: 1px solid rgba(132, 94, 247, 0.3);
 }
 
 .motivation-text {
